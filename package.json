@@ -1,0 +1,37 @@
+{
+  "name": "bitcoinlib",
+  "title": "BitcoinLib-JS",
+  "description": "Javascript library for Bitcoin wallet management",
+  "version": "0.9.2",
+  "homepage": "http://github.com/VersoSolutions/BitcoinLib-JS",
+  "author": {
+    "name": "Verso Solutions LLC",
+    "url": "http://www.versocards.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/VersoSolutions/BitcoinLib-JS.git"
+  },
+  "keywords": [
+    "bitcoin",
+    "wallet"
+  ],
+  "bugs": {
+    "url": "http://github.com/VersoSolutions/BitcoinLib-JS/issues"
+  },
+  "license": {
+    "name": "GPL v3",
+    "url": "http://github.com/VersoSolutions/BitcoinLib-JS/blob/master/LICENSE"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "grunt-contrib-concat": "0.3.0",
+    "grunt-contrib-jshint": "~0.7.2",
+    "grunt-contrib-qunit": "~0.3.0",
+    "grunt-jsdoc": "~0.4.2"
+  },
+  "scripts": {
+    "build": "grunt"
+  }
+}
