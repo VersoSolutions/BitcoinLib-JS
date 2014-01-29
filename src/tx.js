@@ -267,7 +267,7 @@ Verso.Bitcoin.Tx.prototype.isConfirmed = function (latestBlock, minConfirmations
     if (typeof minConfirmations == "undefined")
         minConfirmations = 1;
 
-    return (this.getBlock().getHeight() > 0 && latestBlock.getHeight() - this.getBlock().getHeight() >=  minConfirmations);
+    return (this.getBlock().getHeight() > 0 && latestBlock.getHeight() - this.getBlock().getHeight() >=  minConfirmations - 1);
 };
 
 /**

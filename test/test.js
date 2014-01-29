@@ -30,7 +30,7 @@ test("AES", function(assert) {
     var plaintext = [0,144,171,95,22,2,166,15,91,221,76,129,0,185,232,58,240,215,140,226,115,222,240,101,127];
     var key = [222,165,216,36,178,90,201,206,63,78,171,254,14,62,105,95,242,92,106,89,155,141,120,40,253,194,120,200,151,230,55,39]; // 256 bits
     var iv = [145,218,21,204,4,27,187,247,37,136,191,141,117,104,189,79]; // 128 bits
-    var ciphertext = [159,6,9,72,217,67,68,0,209,255,160,56,9,153,229,192,194,187,136,132,199,165,51,113,138];//,34,145,23,25,30,55,10];
+    var ciphertext = [159,6,9,72,217,67,68,0,209,255,160,56,9,153,229,192,194,187,136,132,199,165,51,113,138];
 
     assert.deepEqual(Cryptography.aesEncrypt(plaintext, key, iv), ciphertext, "Encryption with predefined IV");
     assert.deepEqual(Cryptography.aesDecrypt(ciphertext, key, iv), plaintext, "Decryption with predefined IV");
