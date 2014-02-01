@@ -35,7 +35,7 @@ Verso.Bitcoin.Endpoint = function (data) {
     };
 
     var derivePublic = function () {
-        if (watchOnly || (typeof pt != "undefined" && typeof pub != "undefined" && typeof pubc != "undefined"))
+        if (watchOnly || (pt !== undefined && pub !== undefined && pubc !== undefined))
             return;
 
         // Compute public key
@@ -62,7 +62,7 @@ Verso.Bitcoin.Endpoint = function (data) {
         address = encoding.bytesToBase58(encoding.bytesToCheck(pubHash, 0x00));
     };
 
-    if (typeof data == "undefined") {
+    if (data === undefined) {
         data = genKey();
     }
     else if (typeof data == "string") {
@@ -173,9 +173,9 @@ Verso.Bitcoin.Endpoint = function (data) {
 
 /**
  * Returns true if the data is a bitcoin address
- * 
+ *
  * @param  {String|ByteArray} data   The data to test
- * @return {Boolean}                 Returns true if data is a bitcoin address   
+ * @return {Boolean}                 Returns true if data is a bitcoin address
  */
 Verso.Bitcoin.isAddress = function (data) {
     var encoding = Verso.Encoding;
@@ -198,12 +198,12 @@ Verso.Bitcoin.isAddress = function (data) {
 
 /**
  * Processes the list of loosely-typed endpoints (string addresses, endpoints, etc.) into an array of corresponding Endpoint instances
- * 
+ *
  * @param  {Endpoint|String|ByteArray} endpoints The list of endpoints
  * @return {Array.Endpoint}                      The processed array of endpoints
  */
 Verso.Bitcoin.Endpoint.toList = function (endpoints) {
-    if (typeof endpoints == "undefined")
+    if (endpoints === undefined)
         return [];
 
     if (!Array.isArray(endpoints))
@@ -236,7 +236,7 @@ Verso.Bitcoin.ExtendedEndpoint.prototype = Verso.Class.inherit(Verso.Bitcoin.End
 
 /**
  * Generates a child extended endpoint
- * 
+ *
  * @param  {Integer}          index The index of the child
  * @param  {Boolean)          pub   Boolean indicating whether public derivation should be used
  * @return {ExtendedEndpoint}       The child extended endpoint
@@ -246,7 +246,7 @@ Verso.Bitcoin.ExtendedEndpoint.prototype.getChild = function (index, pub) {
         curve = Verso.Bitcoin.Curve,
         cryptography = Verso.Cryptography;
 
-    if (typeof index == "undefined")
+    if (index === undefined)
         index = 0;
     else if (index < 0)
         throw new Verso.Error("Index cannot be negative!");
@@ -307,7 +307,7 @@ Verso.Bitcoin.MasterEndpoint = function (seed) {
 
     var derived;
 
-    if (typeof seed == "undefined") {
+    if (seed === undefined) {
         do {
             seed = cryptography.randomBytes(32, 6);
             derived = derive(seed);
@@ -343,7 +343,7 @@ Verso.Bitcoin.MasterEndpoint.prototype = Verso.Class.inherit(Verso.Bitcoin.Exten
  */
 Verso.Bitcoin.ChildEndpoint = function (data, chainCode, parent, index) {
     Verso.Bitcoin.ExtendedEndpoint.call(this, data, chainCode);
-    
+
     var path = parent.getPath().concat([index]);
 
     /** Returns the parent node of the extended endpoint */

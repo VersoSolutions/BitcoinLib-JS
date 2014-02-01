@@ -11,7 +11,7 @@ Verso.Encoding = (function () {
         if (ba.length > 1 && ba[0] === 0) {
             ba = ba.slice(1);
         }
-        
+
         if (ba.length) {
             ba = ba.map(function (v) { return (v < 0) ? v + 256 : v; });
         }
@@ -19,7 +19,7 @@ Verso.Encoding = (function () {
             ba = [0];
         }
 
-        if (typeof len != "undefined") {
+        if (len !== undefined) {
             if (len < ba.length) {
                 ba = ba.slice(ba.length - len);
             } else while (len > ba.length) {
@@ -162,7 +162,7 @@ Verso.Encoding = (function () {
     var bytesToCheck = function (ba, version) {
         var bytes = ba.slice(0);
 
-        if (typeof version != "undefined")
+        if (version !== undefined)
             bytes.unshift(version);
 
         var checksum = Verso.Cryptography.SHASHA256(bytes);
@@ -171,7 +171,7 @@ Verso.Encoding = (function () {
     };
 
     var checkToBytes = function (ba, version) {
-        if (typeof version != "undefined" && ba[0] != version)
+        if (version !== undefined && ba[0] != version)
             throw new Verso.Error("Version mismatch!");
 
         var bytes = ba.slice(0, ba.length - 4);
@@ -180,7 +180,7 @@ Verso.Encoding = (function () {
         var chk = Verso.Cryptography.SHASHA256(bytes).slice(0, 4);
         for (var i = 0; i < 4; i++) if (chk[i] != checksum[i]) throw new Verso.Error("Checksum mismatch!");
 
-        if (typeof version == "undefined")
+        if (version === undefined)
             return bytes;
         return bytes.slice(1);
     };

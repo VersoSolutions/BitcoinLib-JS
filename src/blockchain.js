@@ -35,7 +35,7 @@ Verso.Bitcoin.Providers.Blockchain = (function () {
 
     var fetch = function (url, onSuccess, onError, data, method) {
         jQuery.ajax({
-            type: (typeof method == "undefined") ? "GET" : method,
+            type: (method === undefined) ? "GET" : method,
             url: url,
             data: data,
             success: function (res) {
@@ -153,7 +153,7 @@ Verso.Bitcoin.Providers.Blockchain = (function () {
                 var block;
                 var k, amount, endpoint;
 
-                if (typeof txs[i].block_height != "undefined") {
+                if (txs[i].block_height !== undefined) {
                     block = new bitcoin.Block(parseInt(txs[i].block_height));
                 }
                 else {

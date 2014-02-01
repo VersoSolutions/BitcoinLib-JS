@@ -1,6 +1,6 @@
 /**
  * Converts Satoshis to Bitcoins
- * 
+ *
  * @param  {Integer} index The number of Satoshis
  * @return {Number}        The number of Bitcoins
  */
@@ -8,7 +8,7 @@ Verso.Bitcoin.satToBtc = function (s) { return s / 1e8; };
 
 /**
  * Converts Bitcoins to Satoshis
- * 
+ *
  * @param  {Number} index The number of Bitcoins
  * @return {Integer}      The number of Satoshis
  */
@@ -29,13 +29,13 @@ Verso.Bitcoin.TxIn = function (endpoint, amount, hash, index, script, sequence) 
     if (!(endpoint instanceof Verso.Bitcoin.Endpoint))
         endpoint = new Verso.Bitcoin.Endpoint(endpoint);
 
-    if (typeof hash == "undefined")
+    if (hash === undefined)
         hash = [];
-    if (typeof index == "undefined")
+    if (index === undefined)
         index = -1;
-    if (typeof script == "undefined")
+    if (script === undefined)
         script = [];
-    if (typeof sequence == "undefined")
+    if (sequence === undefined)
         sequence = [0xFF, 0xFF, 0xFF, 0xFF];
 
     /** Returns a copy of the transaction hash [big-endian] */
@@ -76,7 +76,7 @@ Verso.Bitcoin.TxOut = function (endpoint, amount, script) {
     if (!(endpoint instanceof Verso.Bitcoin.Endpoint))
         endpoint = new Verso.Bitcoin.Endpoint(endpoint);
 
-    if (typeof script == "undefined") {
+    if (script === undefined) {
         var OP_DUP = 118;
         var OP_EQUALVERIFY = 136;
         var OP_HASH160 = 169;
@@ -258,13 +258,13 @@ Verso.Bitcoin.Tx.prototype.sameAs = function (tx) {
 
 /**
  * Returns true if the transaction is confirmed
- * 
+ *
  * @param  {Block}   latestBlock        The latest block
  * @param  {Integer} [minConfirmations] The number of confirmations required
  * @return {Boolean}                    The confirmation status
  */
 Verso.Bitcoin.Tx.prototype.isConfirmed = function (latestBlock, minConfirmations) {
-    if (typeof minConfirmations == "undefined")
+    if (minConfirmations === undefined)
         minConfirmations = 1;
 
     return (this.getBlock().getHeight() > 0 && latestBlock.getHeight() - this.getBlock().getHeight() >=  minConfirmations - 1);
@@ -294,7 +294,7 @@ Verso.Bitcoin.Tx.prototype.getAmount = function (ep) {
     else if (amount <= 0 && otherOut.length === 0 && this.getOuts().length > 0) {
         return -this.getOuts().reduce(function (prev, curr) { return prev + curr.getAmount(); }, 0);
     }
-    
+
     return amount;
 };
 
@@ -326,17 +326,17 @@ Verso.Bitcoin.Tx.prototype.getMainEndpoint = function (ep) {
                         .sort(function (a, b) { return b.getAmount() - a.getAmount(); })[0]
                         .getEndpoint();
     }
-    
+
     return false;
 };
 
 /**
  * Bitcoin block
- * 
+ *
  * @param {Integer} height The height of the block
  */
 Verso.Bitcoin.Block = function (height) {
-    if (typeof height === "undefined")
+    if (height === undefined)
         height = 0;
 
     this.getHeight = function () { return height; };

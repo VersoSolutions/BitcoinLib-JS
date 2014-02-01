@@ -18,7 +18,7 @@ Verso.Cryptography = (function () {
      * Add entropy to the RNG (without stopping entropy collection)
      *
      * @memberOf Verso.Cryptography
-     * @param  {Array}   ba Entropic byte array 
+     * @param  {Array}   ba Entropic byte array
      */
     var addPureEntropy = function (ba) {
         entropy = entropy.concat(ba);
@@ -43,7 +43,7 @@ Verso.Cryptography = (function () {
      * @return {ByteArray}            The generated random byte array
      */
     var randomBytes = function (length, paranoia) {
-        if (typeof paranoia == "undefined")
+        if (paranoia === undefined)
             paranoia = 0;
 
         var words;
@@ -78,7 +78,7 @@ Verso.Cryptography = (function () {
             this.encrypt = function () { return hasher.encrypt.apply(hasher, arguments); };
         };
 
-        // TEMP: Should convert password from UTF8 
+        // TEMP: Should convert password from UTF8
 
         return Verso.Encoding.wordsToBytes(
                  sjcl.misc.pbkdf2( // SJCL implementation of PBKDF2 much more efficient than CryptoJS implementation
@@ -91,7 +91,7 @@ Verso.Cryptography = (function () {
 
     /**
      * Hashes the input byte array with SHA256
-     * 
+     *
      * @memberOf Verso.Cryptography
      * @param {ByteArray} ba The data to hash
      */
@@ -101,7 +101,7 @@ Verso.Cryptography = (function () {
 
     /**
      * Hashes the input byte array with SHA256 of SHA256
-     * 
+     *
      * @memberOf Verso.Cryptography
      * @param {ByteArray} ba The data to hash
      */
@@ -111,7 +111,7 @@ Verso.Cryptography = (function () {
 
     /**
      * Hashes the input byte array with SHA256 of SHA256 of SHA256
-     * 
+     *
      * @memberOf Verso.Cryptography
      * @param {ByteArray} ba The data to hash
      */
@@ -121,7 +121,7 @@ Verso.Cryptography = (function () {
 
     /**
      * Hashes the input byte array with RIPEMD160
-     * 
+     *
      * @memberOf Verso.Cryptography
      * @param {ByteArray} ba The data to hash
      */
@@ -131,7 +131,7 @@ Verso.Cryptography = (function () {
 
     /**
      * Hashes the input byte array with RIPEMD160 of SHA256
-     * 
+     *
      * @memberOf Verso.Cryptography
      * @param {ByteArray} ba The data to hash
      */
@@ -145,7 +145,7 @@ Verso.Cryptography = (function () {
      * @memberOf Verso.Cryptography
      * @param {ByteArray} ba  The data to hash
      * @param {ByteArray} key The key
-     * @return {ByteArray}    The hash 
+     * @return {ByteArray}    The hash
     */
     var HMACSHA512 = function (ba, key) {
         return Verso.Encoding.wordArrayToBytes(CryptoJS.HmacSHA512(Verso.Encoding.bytesToWordArray(ba), Verso.Encoding.bytesToWordArray(key)));
@@ -161,7 +161,7 @@ Verso.Cryptography = (function () {
      * @return {ByteArray}           The ciphertext
      */
     var aesEncrypt = function (plaintext, key, iv) {
-        var ivPredefined = (typeof iv !== "undefined");
+        var ivPredefined = (iv !== undefined);
 
         if (!ivPredefined) {
             iv = Verso.Cryptography.randomBytes(128/8, 0);
@@ -238,7 +238,7 @@ Verso.Cryptography = (function () {
      * @return {ByteArray}            The secret shares
      */
     var secretShare = function (secret, n, k, paranoia) {
-        if (typeof paranoia == "undefined")
+        if (paranoia === undefined)
             paranoia = 6;
 
         secrets.setRNG(function (bits) {
@@ -266,7 +266,7 @@ Verso.Cryptography = (function () {
      * @memberOf Verso.Cryptography
      * @param  {Array.ByteArray} shares The secret shares
      * @return {ByteArray}              The secret
-     */ 
+     */
     var secretCombine = function (shares) {
         shares = shares.map(function (s) { return "8".concat(Verso.Encoding.bytesToBase16(s)); });
 

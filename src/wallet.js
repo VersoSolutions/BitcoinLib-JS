@@ -30,7 +30,7 @@ Verso.Bitcoin.Wallet = function (ep, changeMethod, minConfirmations, defaultFee,
         defaultFee = 10000; // TODO: Make this dependent on transaction size
     if (provider === undefined)
         provider = bitcoin.Providers.Blockchain;
-    
+
     /** Adds enpoints to the wallet */
     this.addEndpoints = function (e) {
         e = bitcoin.Endpoint.toList(e);
@@ -172,7 +172,7 @@ Verso.Bitcoin.Wallet = function (ep, changeMethod, minConfirmations, defaultFee,
     });
 
     this.setBalance = function (bal, pending) {
-        if (typeof pending == "undefined")
+        if (pending === undefined)
             pending = balancePending;
 
         if (bal != balance || balancePending != pending) {
@@ -232,7 +232,7 @@ Verso.Bitcoin.Wallet = function (ep, changeMethod, minConfirmations, defaultFee,
 
     /** Sets the time of last fetch */
     this.setFetchTime = function (time) {
-        if(typeof fetchTime == "undefined" || time > fetchTime)
+        if(fetchTime === undefined || time > fetchTime)
             fetchTime = time;
     };
 
@@ -249,7 +249,7 @@ Verso.Bitcoin.Wallet = function (ep, changeMethod, minConfirmations, defaultFee,
 
 /**
  * Fetches all wallet information (e.g. transactions, balance, latest block, unspent)
- * 
+ *
  * @param  {Function} [onResult]  Callback for transactions, balance, pending balance and unspent outputs
  * @param  {Function} [onBalance] Callback for balance, pending balance and unspent outputs
  * @param  {Function} [onError]   Callback in case of error
@@ -299,7 +299,7 @@ Verso.Bitcoin.Wallet.prototype.fetch = function (onResult, onError) {
 
 /**
  * Sends Bitcoins from the wallet to a given address
- * 
+ *
  * @param  {Endpoint|String|ByteArray} to          The destination endpoint (can be the public hash in Base58Check or byte array format)
  * @param  {Number}                    amount      The amount to send (in satoshis)
  * @param  {Number}                    [fee]       The fee for the transaction
@@ -352,7 +352,7 @@ Verso.Bitcoin.Wallet.prototype.send = function (to, amount, fee, onSuccess, onEr
 
 /**
 * Redeem an Endpoint
-* 
+*
 * @param  {Endpoint|String|ByteArray} to          The destination endpoint
 * @param  {Number}                    [fee]       The fee for the transaction
 * @param  {Function}                  [onSuccess] Callback in case of success
@@ -365,7 +365,7 @@ Verso.Bitcoin.Wallet.prototype.redeem = function (source, fee, onSuccess, onErro
         try {
             var balance = ins.reduce(function (i, j) { return i + j.getAmount(); }, 0);
 
-            if(typeof fee == "undefined")
+            if(fee === undefined)
                 fee = that.getDefaultFee();
 
             if (balance > 0) {
