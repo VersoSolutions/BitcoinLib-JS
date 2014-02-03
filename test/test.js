@@ -68,10 +68,10 @@ test("scrypt", function (assert) {
     var tv3 = [112,35,189,203,58,253,115,72,70,28,6,205,129,253,56,235,253,168,251,186,144,79,142,62,169,181,67,246,84,93,161,242,213,67,41,85,97,63,15,207,98,212,151,5,36,42,154,249,230,30,133,220,13,101,30,64,223,207,1,123,69,87,88,135];
     var tv4 = [33,1,203,155,106,81,26,174,173,219,190,9,207,112,248,129,236,86,141,87,74,47,253,77,171,229,238,152,32,173,170,71,142,86,253,143,75,165,208,159,250,28,109,146,124,64,244,195,55,48,64,73,232,169,82,251,203,244,92,111,167,122,65,164];
 
-    assert.deepEqual(Cryptography.scrypt("", Verso.Encoding.utf8ToBytes(""), 16, 1, 1, 64*8), tv1);
-    assert.deepEqual(Cryptography.scrypt("password", Verso.Encoding.utf8ToBytes("NaCl"), 1024, 8, 16, 64*8), tv2);
-    //assert.deepEqual(Cryptography.scrypt("pleaseletmein", Verso.Encoding.utf8ToBytes("SodiumChloride"), 16384, 8, 1, 64*8), tv3);
-    //assert.deepEqual(Cryptography.scrypt("pleaseletmein", Verso.Encoding.utf8ToBytes("SodiumChloride"), 1048576, 8, 1, 64*8), tv4);
+    assert.deepEqual(Cryptography.scrypt("", Verso.Encoding.utf8ToBytes(""), 16, 1, 1, 64*8), tv1, "Test Vector 1 (N = 16, r = 1, p = 1)");
+    assert.deepEqual(Cryptography.scrypt("password", Verso.Encoding.utf8ToBytes("NaCl"), 1024, 8, 16, 64*8), tv2, "Test Vector 2 (N = 1024, r = 8, p = 16)");
+    //assert.deepEqual(Cryptography.scrypt("pleaseletmein", Verso.Encoding.utf8ToBytes("SodiumChloride"), 16384, 8, 1, 64*8), tv3, "Test Vector 3 (N = 16384, r = 8, p = 1)");
+    //assert.deepEqual(Cryptography.scrypt("pleaseletmein", Verso.Encoding.utf8ToBytes("SodiumChloride"), 1048576, 8, 1, 64*8), tv4, "Test Vector 4 (N = 1048576, r = 8, p = 1)");
 });
 
 test("Shamir's secret sharing", function(assert) {
