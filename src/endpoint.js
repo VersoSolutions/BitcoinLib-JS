@@ -283,7 +283,7 @@ Verso.Bitcoin.ExtendedEndpoint.prototype.getChild = function (index, pub) {
  *
  * @constructor
  * @extends {Endpoint}
- * @param   {ByteArray|String} [seed]      The seed used for determinism
+ * @param   {ByteArray|String} [seed] he seed used for determinism
  */
 Verso.Bitcoin.MasterEndpoint = function (seed) {
     var encoding = Verso.Encoding,

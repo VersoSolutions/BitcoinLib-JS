@@ -90,7 +90,7 @@ Verso.Cryptography = (function () {
     };
 
     /**
-     * Colin Percival's scrypt password-based key derivation function. Always returns a 256-bit key.
+     * Colin Percival's scrypt password-based key derivation function.
      *
      * @memberOf Verso.Cryptography
      * @param {String}     password The password
@@ -103,7 +103,7 @@ Verso.Cryptography = (function () {
      *
      * This code is adapted from https://github.com/cheongwy/node-scrypt-js
      *
-     * The following license applies to this function and this function only:
+     * The following license applies only to the function "scrypt" defined below.
      *
      * Copyright (c) 2010-2011 Intalio Pte, All Rights Reserved
      *
@@ -503,7 +503,7 @@ Verso.Cryptography = (function () {
     };
 
     /**
-     * Combines the secret shares based on Samir's Secret Sharing algorithm
+     * Combines the secret shares based on Shamir's Secret Sharing algorithm
      *
      * @memberOf Verso.Cryptography
      * @param  {Array.ByteArray} shares The secret shares
