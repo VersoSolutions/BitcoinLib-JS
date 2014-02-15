@@ -10,7 +10,7 @@ Verso.Bitcoin.Providers.Blockchain = (function () {
     var onBlock;
 
     var setLatestBlock = function (block) {
-        if (latestBlock.getHeight === undefined || block.getHeight() > latestBlock.getHeight()) {
+        if (latestBlock.getHeight() === undefined || block.getHeight() > latestBlock.getHeight()) {
             latestBlock = block;
 
             if (onBlock) {
