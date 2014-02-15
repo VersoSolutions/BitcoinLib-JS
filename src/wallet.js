@@ -120,10 +120,10 @@ Verso.Bitcoin.Wallet = function (ep, changeMethod, minConfirmations, defaultFee,
             if (!exists) {
                 transactions.push(txs[i]);
                 newTx.push(txs[i]);
-            } else if(txs[i].getBlock().getHeight() > 0) {
+            } else if(txs[i].getBlock().getHeight() !== undefined) {
                 var tx = transactions.filter(function (t) { return t.sameAs(txs[i]); })[0];
 
-                if (tx.getBlock().getHeight() <= 0) {
+                if (tx.getBlock().getHeight() === undefined) {
                     tx.setBlock(txs[i].getBlock());
                     newConfirm = true;
                 }
@@ -167,7 +167,7 @@ Verso.Bitcoin.Wallet = function (ep, changeMethod, minConfirmations, defaultFee,
 
     provider.subscribeBlock(function (block) {
         // Check whether previously unconfirmed txs are now in blockchain
-        if (transactions.some(function (tx) { return tx.getBlock().getHeight() <= 0; }))
+        if (transactions.some(function (tx) { return tx.getBlock().getHeight() === undefined; }))
             that.fetch();
     });
 
@@ -324,8 +324,35 @@ Verso.Bitcoin.Wallet.prototype.send = function (to, amount, fee, onSuccess, onEr
     this.fetch(
         function (txs, balance, pending, ins) {
             try {
-                ins = ins.filter(function (i) { return !i.getEndpoint().isWatchOnly(); });
-                balance = ins.reduce(function (i, j) { return i + j.getAmount(); }, 0); // Only consider spendable inputs
+                // Select inputs
+                ins = ins.filter(function (i) { return !i.getEndpoint().isWatchOnly(); })
+                         .sort(function (a, b) { // Sort by decreasing age
+                            var blocka = txs.filter(function (t) {
+                                return t.sameAs(a.getHash());
+                            })[0].getBlock().getHeight();
+
+                            var blockb = txs.filter(function (t) {
+                                return t.sameAs(b.getHash());
+                            })[0].getBlock().getHeight();
+
+                            if (blocka === undefined && blockb === undefined) {
+                                return 0;
+                            } else if (blocka === undefined && blockb !== undefined) {
+                                return 1;
+                            } else if (blockb === undefined && blocka !== undefined) {
+                                return -1;
+                            } else {
+                                return blocka - blockb;
+                            }
+                         })
+                         .reduce(function (prev, curr) { // Select minimum number of inputs
+                            if (prev.reduce(function (i, j) { return i + j.getAmount(); }, 0) < amount + fee) {
+                                prev.push(curr);
+                            }
+                            return prev;
+                         }, []);
+
+                balance = ins.reduce(function (i, j) { return i + j.getAmount(); }, 0); // Amount spent
 
                 var change = balance - (amount + fee);
 

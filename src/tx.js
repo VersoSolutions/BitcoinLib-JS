@@ -267,7 +267,7 @@ Verso.Bitcoin.Tx.prototype.isConfirmed = function (latestBlock, minConfirmations
     if (minConfirmations === undefined)
         minConfirmations = 1;
 
-    return (this.getBlock().getHeight() > 0 && latestBlock.getHeight() - this.getBlock().getHeight() >=  minConfirmations - 1);
+    return (this.getBlock().getHeight() !== undefined && latestBlock.getHeight() - this.getBlock().getHeight() >=  minConfirmations - 1);
 };
 
 /**
@@ -333,11 +333,8 @@ Verso.Bitcoin.Tx.prototype.getMainEndpoint = function (ep) {
 /**
  * Bitcoin block
  *
- * @param {Integer} height The height of the block
+ * @param {Integer} [height] The height of the block
  */
 Verso.Bitcoin.Block = function (height) {
-    if (height === undefined)
-        height = 0;
-
     this.getHeight = function () { return height; };
 };
