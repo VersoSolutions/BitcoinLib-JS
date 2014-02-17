@@ -219,7 +219,7 @@ Verso.Bitcoin.Providers.Blockchain = (function () {
 
         var onFetchSuccess = function (data) {
             try {
-                setLatestBlock(new bitcoin.Block(data));
+                setLatestBlock(new bitcoin.Block(parseInt(data)));
 
                 if (onSuccess)
                     onSuccess(latestBlock);
