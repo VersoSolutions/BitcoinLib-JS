@@ -356,6 +356,7 @@ Verso.Bitcoin.Wallet.prototype.send = function (to, amount, fee, onSuccess, onEr
                 while (i < ins.length && balance < amount + fee) {
                     balance += ins[i].getAmount();
                     selectedIns.push(ins[i]);
+                    i++;
                 }
 
                 var change = balance - (amount + fee);
