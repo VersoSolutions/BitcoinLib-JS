@@ -81,7 +81,7 @@ Verso.Bitcoin.Endpoint = function (data) {
         watchOnly = true;
     }
     else if (Array.isArray(data) && data.length == 25) { // address
-        pubHash = encoding.checkToBytes(data, 0x00);
+        pubHash = encoding.checkToBytes(data, [0x00,0x05]);
         address = encoding.bytesToBase58(data);
         watchOnly = true;
     }

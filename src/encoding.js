@@ -171,8 +171,11 @@ Verso.Encoding = (function () {
     };
 
     var checkToBytes = function (ba, version) {
-        if (version !== undefined && ba[0] != version)
+        if (!Array.isArray(version)) { version = [version]; }
+
+        if (version !== undefined && !version.some(function (v) { return ba[0] === v; })) {
             throw new Verso.Error("Version mismatch!");
+        }
 
         var bytes = ba.slice(0, ba.length - 4);
         var checksum = ba.slice(ba.length - 4, ba.length);
