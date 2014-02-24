@@ -29,7 +29,7 @@ Verso.Bitcoin.Wallet = function (ep, changeMethod, minConfirmations, defaultFee,
     if (defaultFee === undefined)
         defaultFee = 10000; // TODO: Make this dependent on transaction size
     if (provider === undefined)
-        provider = bitcoin.Providers.Blockchain;
+        provider = bitcoin.Providers.Blockr;
 
     /** Adds enpoints to the wallet */
     this.addEndpoints = function (e) {

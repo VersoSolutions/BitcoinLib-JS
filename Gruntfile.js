@@ -29,13 +29,13 @@ module.exports = function (grunt) {
             dist: {
                 src: [
                     'src/core.js',
-                    'src/core.js',
                     'src/cryptography.js',
                     'src/encoding.js',
                     'src/endpoint.js',
                     'src/tx.js',
                     'src/wallet.js',
-                    'src/blockchain.js'
+                    'src/blockchain.js',
+                    'src/blockr.js'
                 ],
                 dest: 'dist/<%= pkg.name %>.min.js'
             }
