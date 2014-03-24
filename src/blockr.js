@@ -69,30 +69,40 @@ Verso.Bitcoin.Providers.Blockr = (function () {
 
             for (var i = 0; i < data.length; i++) { // Loop over addresses
 
+                var e = new bitcoin.Endpoint(data[i].address);
+
                 for (var j = 0; j < data[i].unspent.length; j++) { // Loop over unspents
                     //var conf = parseInt(txs[i].confirmations);
                     //var script = encoding.base16ToBytes(txs[i].script);
-
+                    
                     var hash = encoding.base16ToBytes(data[i].unspent[j].tx);
                     var amount = bitcoin.btcToSat(parseFloat(data[i].unspent[j].amount));
                     var index = parseInt(data[i].unspent[j].n);
                     var sequence = [0xFF, 0xFF, 0xFF, 0xFF];
 
-                    if (script.length == 25 && script[0] == 118 && script[1] == 169 && script[23] == 136 && script[24] == 172) { // accept only standard tx for the time being
-                        var e = new bitcoin.Endpoint(script.slice(3, 23));
+                    var txdetail = supp.data.filter(function (d) { return hash === d.tx; })[0];
 
-                        for (var j = 0; j < ep.length; j++) {
-                            if (ep[j].sameAs(e)) {
-                                e = ep[j];
-                                break;
+                    for (var k = 0; k < txdetail.vouts.length; k++) {
+                        var vout = txdetail.vouts[k];
+
+                        if (!vout.is_nonstandard) {
+                            
+
+                            for (var l = 0; l < ep.length; l++) {
+                                if (ep[l].sameAs(e)) {
+                                    e = ep[l];
+                                    break;
+                                }
                             }
-                        }
 
-                        if (e !== null) {
-                            var tin = new bitcoin.TxIn(e, amount, hash, index, script, sequence);
-                            tin.confirmations = conf;
+                            var amount = 
 
-                            unspent.push(tin);
+                            if (e !== null) {
+                                var tin = new bitcoin.TxIn(e, amount, hash, index, script, sequence);
+                                tin.confirmations = conf;
+
+                                unspent.push(tin);
+                            }
                         }
                     }
                 };
@@ -126,7 +136,7 @@ Verso.Bitcoin.Providers.Blockr = (function () {
                 );
             },
             function (error) {
-                if (onError)
+                if (onError) {
                         onError(error);
                 }
             }
@@ -143,6 +153,7 @@ Verso.Bitcoin.Providers.Blockr = (function () {
      */
     var fetchTx = function (ep, onSuccess, onError) {
         var parseTx = function (txs) {
+
             var res = [];
 
             for (var i = 0; i < txs.length; i++) {
@@ -189,13 +200,13 @@ Verso.Bitcoin.Providers.Blockr = (function () {
         var url = "https://blockr.io/api/v1/address/txs/" + addr;
 
         fetch(url, function (data) {
-            var parsed;
-
+            
             try {
-                setLatestBlock(new bitcoin.Block(data.info.latest_block.height));
+                if (data.status !== "success")
+                    throw new Error();
 
                 if (onSuccess)
-                    onSuccess(parseTx(data.txs));
+                    onSuccess(parseTx(data));
             }
             catch (e) {
                 if (onError)
