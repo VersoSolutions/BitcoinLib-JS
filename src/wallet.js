@@ -243,7 +243,7 @@ Verso.Bitcoin.Wallet = function (ep, changeMethod, minConfirmations, defaultFee,
 
     /** Returns the fee in satoshis for the next payment */
     this.getCurrentFee = function () {
-        return Math.min(100000, Math.ceil(unspents.length/4) * this.getDefaultFee());
+        return this.getDefaultFee();
     };
 };
 
@@ -310,8 +310,11 @@ Verso.Bitcoin.Wallet.prototype.send = function (to, amount, fee, onSuccess, onEr
     var encoding = Verso.Encoding;
     var bitcoin = Verso.Bitcoin;
 
+    if (to === undefined) {
+        throw new Verso.Error("Invalid destination");
+    }
     if (amount === undefined || amount <= 0) {
-        throw new Verso.Error("Invalid amount!");
+        throw new Verso.Error("Invalid amount");
     }
     if (fee === undefined) {
         fee = this.getDefaultFee();
@@ -332,13 +335,25 @@ Verso.Bitcoin.Wallet.prototype.send = function (to, amount, fee, onSuccess, onEr
                 // Select inputs
                 ins = ins.filter(function (i) { return !i.getEndpoint().isWatchOnly(); })
                          .sort(function (a, b) { // Sort by decreasing age
-                             var blocka = txs.filter(function (t) {
-                                 return t.sameAs(a.getHash());
-                             })[0].getBlock().getHeight();
+                             var blocka, blockb;
 
-                             var blockb = txs.filter(function (t) {
+                             var txa = txs.filter(function (t) {
+                                 return t.sameAs(a.getHash());
+                             })[0];
+                             if (txa !== undefined) {
+                                blocka = txa.getBlock().getHeight();
+                             } else {
+                                blocka = 0;
+                             }
+
+                             var txb = txs.filter(function (t) {
                                  return t.sameAs(b.getHash());
-                             })[0].getBlock().getHeight();
+                             })[0];
+                             if (txb !== undefined) {
+                                blockb = txb.getBlock().getHeight();
+                             } else {
+                                blockb = 0;
+                             }
 
                              if (blocka === undefined && blockb === undefined) {
                                  return 0;

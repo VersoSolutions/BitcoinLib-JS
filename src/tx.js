@@ -76,22 +76,36 @@ Verso.Bitcoin.TxOut = function (endpoint, amount, script) {
     if (!(endpoint instanceof Verso.Bitcoin.Endpoint))
         endpoint = new Verso.Bitcoin.Endpoint(endpoint);
 
-    if (script === undefined) {
-        var OP_DUP = 118;
-        var OP_EQUALVERIFY = 136;
-        var OP_HASH160 = 169;
-        var OP_CHECKSIG = 172;
+    var outputScript = function () {
+        var OP_DUP = 118,
+            OP_EQUAL = 135,
+            OP_EQUALVERIFY = 136,
+            OP_HASH160 = 169,
+            OP_CHECKSIG = 172,
+            pub;
 
-        var pub = endpoint.getPublicHash();
+        if (script === undefined && (endpoint.getVersion() === undefined || endpoint.getVersion() === 0x00)) { // pay-to-pubkey-hash
+            pub = endpoint.getPublicHash();
 
-        script = [];
-        script.push(OP_DUP);
-        script.push(OP_HASH160);
-        script.push(pub.length);
-        script = script.concat(pub);
-        script.push(OP_EQUALVERIFY);
-        script.push(OP_CHECKSIG);
-    }
+            script = [];
+            script.push(OP_DUP);
+            script.push(OP_HASH160);
+            script.push(pub.length);
+            script = script.concat(pub);
+            script.push(OP_EQUALVERIFY);
+            script.push(OP_CHECKSIG);
+        } else if (script === undefined && endpoint.getVersion() === 0x05) { // pay-to-script-hash
+            pub = endpoint.getPublicHash();
+
+            script = [];
+            script.push(OP_HASH160);
+            script.push(pub.length);
+            script = script.concat(pub);
+            script.push(OP_EQUAL);
+        }
+    };
+
+    if (script === undefined) { outputScript(); }
 
     /** Returns the destination endpoint */
     this.getEndpoint = function () { return endpoint; };

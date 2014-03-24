@@ -22,6 +22,7 @@ Verso.Bitcoin.Endpoint = function (data) {
     var pubc;
     var pubHash;
     var address;
+    var version;
 
     var genKey = function (bigint) {
         var key = encoding.bytesUnsignedToBigInteger(cryptography.randomBytes(32, 6))
@@ -77,11 +78,13 @@ Verso.Bitcoin.Endpoint = function (data) {
 
     if (Array.isArray(data) && data.length == 20) { // pubHash
         pubHash = data;
+        version = 0x00;
         address = encoding.bytesToBase58(encoding.bytesToCheck(data, 0x00));
         watchOnly = true;
     }
     else if (Array.isArray(data) && data.length == 25) { // address
         pubHash = encoding.checkToBytes(data, [0x00,0x05]);
+        version = data[0];
         address = encoding.bytesToBase58(data);
         watchOnly = true;
     }
@@ -96,6 +99,7 @@ Verso.Bitcoin.Endpoint = function (data) {
         }
         else throw new Verso.Error("Invalid argument");
 
+        version = 0x00;
         watchOnly = false;
 
         /** Returns the private key */
@@ -147,6 +151,8 @@ Verso.Bitcoin.Endpoint = function (data) {
 
     /** Returns the hash of the public key */
     this.getPublicHash = function () { derivePublic(); return pubHash; };
+    /** Returns the endpoint version */
+    this.getVersion = function () { return version; };
     /** Returns the Bitcoin address in Base58Check string format */
     this.getAddress = function () { derivePublic(); return address; };
     /** Returns a new watch-only version of the endpoint */
@@ -188,7 +194,7 @@ Verso.Bitcoin.isAddress = function (data) {
         return false;
 
     try {
-        encoding.checkToBytes(data, 0x00);
+        encoding.checkToBytes(data, [0x00, 0x05]);
         return true;
     }
     catch (e) {
