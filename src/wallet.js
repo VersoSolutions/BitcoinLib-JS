@@ -27,7 +27,7 @@ Verso.Bitcoin.Wallet = function (ep, changeMethod, minConfirmations, defaultFee,
     if (minConfirmations === undefined || minConfirmations < 1)
         minConfirmations = 2;
     if (defaultFee === undefined)
-        defaultFee = 10000; // TODO: Make this dependent on transaction size
+        defaultFee = 10000;
     if (provider === undefined)
         provider = bitcoin.Providers.Blockchain;
 
@@ -242,8 +242,13 @@ Verso.Bitcoin.Wallet = function (ep, changeMethod, minConfirmations, defaultFee,
     };
 
     /** Returns the fee in satoshis for the next payment */
-    this.getCurrentFee = function () {
-        return this.getDefaultFee();
+    this.getCurrentFee = function (amount) {
+        if (amount === undefined) {
+            return this.getDefaultFee();
+        } else {
+            var selectedIns = Verso.Bitcoin.Utils.selectInputs(transactions, unspents, amount);
+            return Math.min(1e5, Math.ceil(selectedIns.length/4) * 10000);
+        }
     };
 };
 
@@ -332,48 +337,9 @@ Verso.Bitcoin.Wallet.prototype.send = function (to, amount, fee, onSuccess, onEr
     this.fetch(
         function (txs, balance, pending, ins) {
             try {
-                // Select inputs
-                ins = ins.filter(function (i) { return !i.getEndpoint().isWatchOnly(); })
-                         .sort(function (a, b) { // Sort by decreasing age
-                             var blocka, blockb;
+                selectedIns = Verso.Bitcoin.Utils.selectInputs(txs, ins, amount, fee);
 
-                             var txa = txs.filter(function (t) {
-                                 return t.sameAs(a.getHash());
-                             })[0];
-                             if (txa !== undefined) {
-                                blocka = txa.getBlock().getHeight();
-                             } else {
-                                blocka = 0;
-                             }
-
-                             var txb = txs.filter(function (t) {
-                                 return t.sameAs(b.getHash());
-                             })[0];
-                             if (txb !== undefined) {
-                                blockb = txb.getBlock().getHeight();
-                             } else {
-                                blockb = 0;
-                             }
-
-                             if (blocka === undefined && blockb === undefined) {
-                                 return 0;
-                             } else if (blocka === undefined && blockb !== undefined) {
-                                 return 1;
-                             } else if (blockb === undefined && blocka !== undefined) {
-                                 return -1;
-                             } else {
-                                 return blocka - blockb;
-                             }
-                         });
-
-                balance = 0;
-                var i = 0, selectedIns = [];
-                while (i < ins.length && balance < amount + fee) {
-                    balance += ins[i].getAmount();
-                    selectedIns.push(ins[i]);
-                    i++;
-                }
-
+                balance = selectedIns.reduce(function (i, j) { return i + j.getAmount(); }, 0);
                 var change = balance - (amount + fee);
 
                 if (change >= 0) {
@@ -384,13 +350,13 @@ Verso.Bitcoin.Wallet.prototype.send = function (to, amount, fee, onSuccess, onEr
 
                     that.getProvider().send(new Verso.Bitcoin.Tx(selectedIns, outs), onSuccess, onError);
                 }
-                else if (onError) {
-                    onError(new Verso.BalanceError("Insufficient balance!"));
+                else if (onError) { // REM: This should never happen
+                    onError(new Verso.BalanceError("Insufficient balance"));
                 }
             }
             catch (err) {
                 if (onError)
-                    onError(new Verso.Error("Transaction interrupted!"));
+                    onError(new Verso.Error("Transaction interrupted"));
             }
         },
         onError

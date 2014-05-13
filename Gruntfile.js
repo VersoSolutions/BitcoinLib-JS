@@ -35,7 +35,8 @@ module.exports = function (grunt) {
                     'src/endpoint.js',
                     'src/tx.js',
                     'src/wallet.js',
-                    'src/blockchain.js'
+                    'src/blockchain.js',
+                    'src/utils.js'
                 ],
                 dest: 'dist/<%= pkg.name %>.min.js'
             }

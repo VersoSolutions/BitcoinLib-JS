@@ -38,7 +38,13 @@ var Verso = Verso || {
          * @namespace
          * @memberOf Verso.Bitcoin
          */
-        Providers: {}
+        Providers: {},
+        /**
+         * Bitcoin utilities
+         * @namespace
+         * @memberOf Verso.Bitcoin
+         */
+        Utils: {}
     },
     Class: {
         inherit: function (o) {
