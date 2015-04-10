@@ -15,7 +15,7 @@ Verso.Bitcoin.Utils.selectInputs = function (txs, ins, amount, fee) {
     if (!arbitraryFee) { fee = 0; }
 
     // Select inputs
-    ins = ins.sort(function (a, b) { // Sort by decreasing age
+    /*ins = ins.sort(function (a, b) { // Sort by decreasing age
                  var blocka, blockb;
 
                  var txa = txs.filter(function (t) {
@@ -45,7 +45,7 @@ Verso.Bitcoin.Utils.selectInputs = function (txs, ins, amount, fee) {
                  } else {
                      return blocka - blockb;
                  }
-             });
+             });*/
 
     balance = 0;
     var i = 0, selectedIns = [];
